@@ -1,5 +1,5 @@
 {
-  "name": "electron-tuio",
+  "name": "@lejeunerenard/electron-tuio",
   "version": "1.0.0",
   "description": "Add touch support to electron via a tuio server",
   "main": "index.mjs",
