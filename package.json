@@ -6,13 +6,16 @@
   "type": "module",
   "scripts": {
     "lint": "eslint '**/*.js'",
-    "test:unit": "tape \"tests/**/*.mjs\"",
-    "test": "npm run lint && npm run test:unit"
+    "test:unit": "tape \"tests/**/*.unit.mjs\"",
+    "test:integration": "playwright test",
+    "test": "npm run lint && npm run test:unit && npm run test:integration"
   },
   "keywords": [],
   "author": "Sean Zellmer <sean@lejeunerenard.com> (http://lejeunerenard.com/)",
   "license": "MIT",
   "devDependencies": {
+    "@playwright/test": "^1.41.2",
+    "electron": "^28.2.3",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -22,6 +25,7 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "node-osc": "^9.1.0"
+    "node-osc": "^9.1.0",
+    "tuio-to-touch": "git+ssh://biz:/opt/git/npm-modules/tuio-to-touch.git#rel-to-element-w-client-coord-adjustments"
   }
 }

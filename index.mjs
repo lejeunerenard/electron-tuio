@@ -20,8 +20,7 @@ export function setupTUIO (port = 3333, msgNamespace = 'tuio:') {
     if (outputPort) {
       outputPort.postMessage({ event: `${msgNamespace}message`, message: msg })
     }
-  })
-  s.on('bundle', (bundle, rinfo) => {
+  }).on('bundle', (bundle, rinfo) => {
     d.message('bundle', bundle)
     if (outputPort) outputPort.postMessage({ event: `${msgNamespace}bundle`, bundle })
   })
@@ -32,3 +31,16 @@ export function setupTUIO (port = 3333, msgNamespace = 'tuio:') {
   const attachPort = (port) => { outputPort = port }
   return [attachPort, s]
 }
+
+export function setupTUIOServer (ipc, tuioPort, msgNamespace) {
+  // TODO Figure out how to clean up on app quit
+  ipc.on('message-port:setup', async (event) => {
+    const [attachToTUIOServer] = setupTUIO(tuioPort, msgNamespace)
+
+    const port = event.ports[0]
+    attachToTUIOServer(port)
+    port.start()
+  })
+}
+
+export * from './renderer.mjs'
