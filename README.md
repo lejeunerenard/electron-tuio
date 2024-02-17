@@ -17,7 +17,9 @@ setupTUIOServer(ipcMain)
 *In `preload.js`*
 ```js
 import { ipcRenderer } from 'electron'
-import { setupMessagePort } from '@lejeunerenard/electron-tuio'
+import { attachToElement } from '@lejeunerenard/electron-tuio'
 
-setupMessagePort(ipcRenderer, window)
+window.addEventListener('load', () => {
+  attachToElement(ipcRenderer, document.body)
+})
 ```
