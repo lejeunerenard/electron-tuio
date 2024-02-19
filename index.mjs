@@ -33,9 +33,12 @@ export function setupTUIO (port = 3333, msgNamespace = 'tuio:') {
 }
 
 export function setupTUIOServer (ipc, tuioPort, msgNamespace) {
+  let currentServer = null
   // TODO Figure out how to clean up on app quit
   ipc.on('message-port:setup', async (event) => {
-    const [attachToTUIOServer] = setupTUIO(tuioPort, msgNamespace)
+    const [attachToTUIOServer, server] = setupTUIO(tuioPort, msgNamespace)
+    if (currentServer) currentServer.close()
+    currentServer = server
 
     const port = event.ports[0]
     attachToTUIOServer(port)
