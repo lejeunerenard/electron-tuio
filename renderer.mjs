@@ -1,18 +1,26 @@
 import { TuioToTouch } from 'tuio-to-touch'
+import debug from 'debug'
 import { MSG_PORT_EVENT } from './constants.mjs'
 
-export function attachToElement (ipc, element) {
+const d = {
+  log: debug('tuio:renderer')
+}
+
+export function attachToElement (ipc, element, opts = {}) {
   const toTouch = new TuioToTouch(element)
 
+  const msgPortEvent = opts.msgPortEvent || MSG_PORT_EVENT
+  d.log('requesting MessagePort via', msgPortEvent)
+
   const channel = new MessageChannel()
-  ipc.postMessage(MSG_PORT_EVENT, null, [channel.port1])
+  ipc.postMessage(msgPortEvent, null, [channel.port1])
 
   const port = channel.port2
   port.start()
   port.onmessage = ({ data: msg }) => {
+    d.log('message', msg)
     switch (msg.event) {
       case 'tuio:bundle':
-        console.log('msg.bundle', msg.bundle)
         toTouch.parseTUIO(msg.bundle)
         break
       case 'tuio:message':
@@ -20,5 +28,5 @@ export function attachToElement (ipc, element) {
         break
     }
   }
-  console.log('setup msg port')
+  d.log('setup msg port', msgPortEvent)
 }

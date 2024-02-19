@@ -19,7 +19,7 @@ const waitForPage = async (app, check) => {
 
 test.describe('integration', () => {
   test('basic', async () => {
-    const app = await electron.launch({ args: ['tests/integration/main.js'] })
+    const app = await electron.launch({ args: ['tests/integration/basic/main.js'] })
 
     const page = await waitForPage(app, async (window) => {
       const title = await window.title()
@@ -97,7 +97,7 @@ test.describe('integration', () => {
   })
 
   test('reloading doesnt leave a tuio running', async () => {
-    const app = await electron.launch({ args: ['tests/integration/main.js'] })
+    const app = await electron.launch({ args: ['tests/integration/basic/main.js'] })
 
     const page = await waitForPage(app, async (window) => {
       const title = await window.title()
@@ -144,6 +144,86 @@ test.describe('integration', () => {
     )
     await new Promise((resolve) => client.send(touchStart, resolve))
     await touchStartReceived
+
+    await app.close()
+  })
+
+  test('multiple MessagePorts', async () => {
+    const app = await electron.launch({ args: ['tests/integration/multiple-ports/main.js'] })
+
+    const page = await waitForPage(app, async (window) => {
+      const title = await window.title()
+      return !title.match(/DevTools/)
+    })
+
+    await page.waitForEvent('domcontentloaded')
+
+    const target = page.locator('#panel-1')
+    const target2 = page.locator('#panel-2')
+    await target.waitFor({ state: 'attached' })
+    await target2.waitFor({ state: 'attached' })
+
+    const touchStartReceived = awaitEventOnLocator(target, 'touchstart')
+    const touchStartReceived2 = awaitEventOnLocator(target2, 'touchstart')
+
+    const source = 'TuioPad@10.0.0.1'
+    const client = new Client('127.0.0.1', 3333)
+
+    await setTimeout(125)
+
+    // Alive message
+    const alive = new Bundle(['/tuio/2Dcur', 'source', source],
+      ['/tuio/2Dcur', 'alive'],
+      ['/tuio/2Dcur', 'fseq', 100]
+    )
+    await new Promise((resolve) => client.send(alive, resolve))
+
+    // Touch start message
+    const touchStart = new Bundle(
+      ['/tuio/2Dcur', 'source', source],
+      ['/tuio/2Dcur', 'alive', 12],
+      [
+        '/tuio/2Dcur',
+        'set',
+        12,
+        0.5255398750305176,
+        0.06844444572925568,
+        0,
+        0,
+        0
+      ],
+      ['/tuio/2Dcur', 'fseq', 2390]
+    )
+    await new Promise((resolve) => client.send(touchStart, resolve))
+    await touchStartReceived
+
+    const client2 = new Client('127.0.0.1', 3334)
+
+    // Alive message
+    const alive2 = new Bundle(['/tuio/2Dcur', 'source', source],
+      ['/tuio/2Dcur', 'alive'],
+      ['/tuio/2Dcur', 'fseq', 100]
+    )
+    await new Promise((resolve) => client2.send(alive2, resolve))
+
+    // Touch start message
+    const touchStart2 = new Bundle(
+      ['/tuio/2Dcur', 'source', source],
+      ['/tuio/2Dcur', 'alive', 12],
+      [
+        '/tuio/2Dcur',
+        'set',
+        12,
+        0.5255398750305176,
+        0.06844444572925568,
+        0,
+        0,
+        0
+      ],
+      ['/tuio/2Dcur', 'fseq', 2390]
+    )
+    await new Promise((resolve) => client2.send(touchStart2, resolve))
+    await touchStartReceived2
 
     await app.close()
   })

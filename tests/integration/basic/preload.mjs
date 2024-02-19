@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { attachToElement } from '../../index.mjs'
+import { attachToElement } from '../../../index.mjs'
 
 console.log('in preload')
 window.addEventListener('load', () => {

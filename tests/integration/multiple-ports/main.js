@@ -1,5 +1,5 @@
 import { app, ipcMain, BrowserWindow } from 'electron'
-import { setupTUIOServer } from '../../index.mjs'
+import { setupTUIOServer } from '../../../index.mjs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -17,4 +17,5 @@ app.whenReady().then(() => {
   win.webContents.openDevTools()
 })
 
-setupTUIOServer(ipcMain)
+setupTUIOServer(ipcMain, 'port1', 3333)
+setupTUIOServer(ipcMain, 'port2', 3334)

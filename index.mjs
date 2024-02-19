@@ -1,5 +1,6 @@
 import { Server } from 'node-osc'
 import debug from 'debug'
+import { MSG_PORT_EVENT } from './constants.mjs'
 
 const d = {
   server: debug('tuio:server'),
@@ -25,17 +26,21 @@ export function setupTUIO (port = 3333, msgNamespace = 'tuio:') {
     if (outputPort) outputPort.postMessage({ event: `${msgNamespace}bundle`, bundle })
   })
 
-  d.server('message port started')
+  d.server('TUIO server started')
 
   // Message channel port callback
-  const attachPort = (port) => { outputPort = port }
+  const attachPort = (port) => {
+    outputPort = port
+    d.server('message port attached')
+  }
   return [attachPort, s]
 }
 
-export function setupTUIOServer (ipc, tuioPort, msgNamespace) {
+export function setupTUIOServer (ipc, msgPortEvent = MSG_PORT_EVENT, tuioPort, msgNamespace) {
+  d.server(`Setting up MessagePort & TUIO Pair for ${msgPortEvent} @0.0.0.0:${tuioPort}`)
   let currentServer = null
   // TODO Figure out how to clean up on app quit
-  ipc.on('message-port:setup', async (event) => {
+  ipc.on(msgPortEvent, async (event) => {
     const [attachToTUIOServer, server] = setupTUIO(tuioPort, msgNamespace)
     if (currentServer) currentServer.close()
     currentServer = server
