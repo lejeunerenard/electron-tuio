@@ -24,8 +24,8 @@
     "tape": "^5.7.4"
   },
   "dependencies": {
+    "@lejeunerenard/tuio-to-touch": "github:lejeunerenard/tuio-to-touch",
     "debug": "^4.3.4",
-    "node-osc": "^9.1.0",
-    "tuio-to-touch": "git+ssh://biz:/opt/git/npm-modules/tuio-to-touch.git#rel-to-element-w-client-coord-adjustments"
+    "node-osc": "^9.1.0"
   }
 }

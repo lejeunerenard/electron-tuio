@@ -1,4 +1,4 @@
-import { TuioToTouch } from 'tuio-to-touch'
+import { TuioToTouch } from '@lejeunerenard/tuio-to-touch'
 import debug from 'debug'
 import { MSG_PORT_EVENT } from './constants.mjs'
 
