@@ -1,6 +1,6 @@
 {
   "name": "@lejeunerenard/electron-tuio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add touch support to electron via a tuio server",
   "main": "index.mjs",
   "type": "module",
