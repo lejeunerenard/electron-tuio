@@ -28,7 +28,7 @@
     "tape": "^5.7.4"
   },
   "dependencies": {
-    "@lejeunerenard/tuio-to-touch": "github:lejeunerenard/tuio-to-touch",
+    "@lejeunerenard/tuio-to-touch": "github:lejeunerenard/tuio-to-touch#1.6.0",
     "debug": "^4.3.4",
     "node-osc": "^9.1.0"
   }
