@@ -7,7 +7,7 @@ const d = {
 }
 
 export function attachToElement (ipc, element, opts = {}) {
-  const toTouch = new TuioToTouch(element)
+  const toTouch = new TuioToTouch(element, opts)
 
   const msgPortEvent = opts.msgPortEvent || MSG_PORT_EVENT
   d.log('requesting MessagePort via', msgPortEvent)
